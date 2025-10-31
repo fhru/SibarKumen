@@ -29,9 +29,12 @@ const panduanData = [
   },
 ];
 
-export default function Panduan() {
+export default function Panduan({ ref }) {
   return (
-    <div className="w-full px-4 sm:px-8 md:px-24 py-12 md:py-24 flex flex-col items-center justify-center">
+    <div
+      className="w-full px-4 sm:px-8 md:px-24 py-12 md:py-24 flex flex-col items-center justify-center"
+      ref={ref}
+    >
       {/* Teks Section */}
       <div className="text-center mb-8 md:mb-12">
         <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Panduan Penggunaan Aplikasi</h1>

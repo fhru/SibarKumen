@@ -34,7 +34,7 @@ export default function ChatWidget() {
           <CardHeader className="flex flex-row items-center justify-between border-b">
             <div className="flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-primary" />
-              <CardTitle className="text-lg">SibarKumen AI</CardTitle>
+              <CardTitle className="text-lg">AI Assistant</CardTitle>
             </div>
             <Button
               variant="ghost"

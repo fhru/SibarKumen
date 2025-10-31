@@ -1,8 +1,8 @@
-export default function Dashboard() {
+export default function MutasiBarang() {
   return (
     <div className="">
       <div className="">
-        <h1>Ini Adalah Dashboard</h1>
+        <h1>Hello Mutasi</h1>
       </div>
     </div>
   );

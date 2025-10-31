@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model barang {
+  id_barang            Int                    @id @default(autoincrement())
+  id_kategori          Int?
+  kode_barang          String                 @db.VarChar
+  nama_barang          String                 @db.VarChar
+  deskripsi            String?
+  created_at           DateTime?              @default(now()) @db.Timestamp(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamp(6)
+  kategori             kategori?              @relation(fields: [id_kategori], references: [id_kategori], onDelete: NoAction, onUpdate: NoAction)
+  detail_barang_keluar detail_barang_keluar[]
+  detail_barang_masuk  detail_barang_masuk[]
+  detail_peminjaman    detail_peminjaman[]
+  mutasi_barang        mutasi_barang[]
+  stok_barang          stok_barang[]
+}
+
+model barang_keluar {
+  id_barang_keluar     Int                    @id @default(autoincrement())
+  id_user              Int?
+  tanggal_keluar       DateTime               @db.Date
+  keterangan           String?
+  created_at           DateTime?              @default(now()) @db.Timestamp(6)
+  users                users?                 @relation(fields: [id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
+  detail_barang_keluar detail_barang_keluar[]
+  mutasi_barang        mutasi_barang[]
+}
+
+model barang_masuk {
+  id_barang_masuk     Int                   @id @default(autoincrement())
+  id_user             Int?
+  tanggal_masuk       DateTime              @db.Date
+  keterangan          String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  users               users?                @relation(fields: [id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
+  detail_barang_masuk detail_barang_masuk[]
+  mutasi_barang       mutasi_barang[]
+}
+
+model detail_barang_keluar {
+  id_detail_keluar Int            @id @default(autoincrement())
+  id_barang_keluar Int?
+  id_barang        Int?
+  jumlah           Int?
+  tujuan           String?        @db.VarChar
+  barang           barang?        @relation(fields: [id_barang], references: [id_barang], onDelete: NoAction, onUpdate: NoAction)
+  barang_keluar    barang_keluar? @relation(fields: [id_barang_keluar], references: [id_barang_keluar], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model detail_barang_masuk {
+  id_detail_masuk Int           @id @default(autoincrement())
+  id_barang_masuk Int?
+  id_barang       Int?
+  jumlah          Int?
+  harga           Decimal?      @db.Decimal
+  barang          barang?       @relation(fields: [id_barang], references: [id_barang], onDelete: NoAction, onUpdate: NoAction)
+  barang_masuk    barang_masuk? @relation(fields: [id_barang_masuk], references: [id_barang_masuk], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model detail_peminjaman {
+  id_detail_pinjam  Int                @id @default(autoincrement())
+  id_peminjaman     Int?
+  id_barang         Int?
+  jumlah            Int?
+  kondisi           String?            @db.VarChar
+  barang            barang?            @relation(fields: [id_barang], references: [id_barang], onDelete: NoAction, onUpdate: NoAction)
+  peminjaman_barang peminjaman_barang? @relation(fields: [id_peminjaman], references: [id_peminjaman], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model kategori {
+  id_kategori   Int       @id @default(autoincrement())
+  nama_kategori String    @db.VarChar
+  keterangan    String?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  barang        barang[]
+}
+
+model mutasi_barang {
+  id_mutasi        Int            @id @default(autoincrement())
+  id_barang        Int?
+  id_barang_masuk  Int?
+  id_barang_keluar Int?
+  tanggal_mutasi   DateTime       @db.Date
+  tipe_mutasi      String?        @db.VarChar
+  jumlah           Int?
+  keterangan       String?
+  created_at       DateTime?      @default(now()) @db.Timestamp(6)
+  barang           barang?        @relation(fields: [id_barang], references: [id_barang], onDelete: NoAction, onUpdate: NoAction)
+  barang_keluar    barang_keluar? @relation(fields: [id_barang_keluar], references: [id_barang_keluar], onDelete: NoAction, onUpdate: NoAction)
+  barang_masuk     barang_masuk?  @relation(fields: [id_barang_masuk], references: [id_barang_masuk], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model peminjaman_barang {
+  id_peminjaman     Int                 @id @default(autoincrement())
+  id_user           Int?
+  tanggal_pinjam    DateTime            @db.Date
+  tanggal_kembali   DateTime?           @db.Date
+  status            String?             @db.VarChar
+  keterangan        String?
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  detail_peminjaman detail_peminjaman[]
+  users             users?              @relation(fields: [id_user], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model stok_barang {
+  id_stok     Int       @id @default(autoincrement())
+  id_barang   Int?
+  stok_masuk  Int?      @default(0)
+  stok_keluar Int?      @default(0)
+  stok_akhir  Int?      @default(0)
+  updated_at  DateTime? @default(now()) @db.Timestamp(6)
+  barang      barang?   @relation(fields: [id_barang], references: [id_barang], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id_user           Int                 @id @default(autoincrement())
+  username          String              @unique @db.VarChar
+  nama_lengkap      String              @db.VarChar
+  password          String
+  role              String              @db.VarChar
+  created_at        DateTime?           @default(now()) @db.Timestamp(6)
+  barang_keluar     barang_keluar[]
+  barang_masuk      barang_masuk[]
+  peminjaman_barang peminjaman_barang[]
+}
