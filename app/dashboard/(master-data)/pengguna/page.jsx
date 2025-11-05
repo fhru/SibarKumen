@@ -1,34 +1,23 @@
-import { UserTable } from "@/components/pengguna/user-table"
-import { SummaryCards } from "@/components/pengguna/summary-cards"
-import prisma from "@/lib/prisma"
-
-async function getUserData() {
-  const users = await prisma.users.findMany();
-  
-  const totalUsers = users.length;
-  const adminUsers = users.filter(user => user.role === 'admin').length;
-  const gudangUsers = users.filter(user => user.role === 'gudang').length;
-  
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const newUsers = users.filter(user => new Date(user.created_at) > thirtyDaysAgo).length;
-
-  const stats = {
-    totalUsers,
-    adminUsers,
-    gudangUsers,
-    newUsers,
-  }
-
-  return { users, stats };
-}
+import { UserTable } from "@/components/pengguna/user-table";
+import { getAllUsers } from "@/lib/data/users";
 
 export default async function PenggunaPage() {
-  const { users, stats } = await getUserData();
+  const users = await getAllUsers();
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const stats = {
+    totalUsers: users.length,
+    adminUsers: users.filter((user) => user.role === "admin").length,
+    gudangUsers: users.filter((user) => user.role === "gudang").length,
+    newUsers: users.filter((user) => new Date(user.created_at) > thirtyDaysAgo)
+      .length,
+  };
 
   return (
     <div className="container mx-auto py-10">
       <UserTable users={users} stats={stats} />
     </div>
-  )
+  );
 }
