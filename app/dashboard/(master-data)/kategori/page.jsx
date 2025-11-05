@@ -1,9 +1,13 @@
-export default function Kategori() {
+import { getCategories, getCategoryStats } from '@/lib/data/kategori';
+import { KategoriTable } from '@/components/kategori/table';
+
+export default async function KategoriPage() {
+  const categories = await getCategories();
+  const stats = await getCategoryStats();
+
   return (
-    <div className="">
-      <div className="">
-        <h1>Hello Kategori</h1>
-      </div>
+    <div className="p-4">
+      <KategoriTable initialCategories={categories} stats={stats} />
     </div>
   );
 }

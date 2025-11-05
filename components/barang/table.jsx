@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,46 +20,46 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { UserForm } from '@/components/pengguna/user-form';
-import { columns as makeColumns } from '@/components/pengguna/columns';
+import { BarangForm } from '@/components/barang/form';
+import { columns as makeColumns } from '@/components/barang/columns';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { SummaryCards } from "@/components/pengguna/summary-cards"
+import { SummaryCards } from "@/components/barang/summary-cards"
 
-export function UserTable({ users, stats }) {
+export function BarangTable({ initialBarang, stats, kategori }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [deleteUser, setDeleteUser] = useState(null);
+  const [selectedBarang, setSelectedBarang] = useState(null);
+  const [deleteBarang, setDeleteBarang] = useState(null);
 
-  const handleEdit = (user) => {
-    setSelectedUser(user);
+  const handleEdit = (barang) => {
+    setSelectedBarang(barang);
     setOpen(true);
   };
 
-  const handleDelete = (user) => {
-    setDeleteUser(user);
+  const handleDelete = (barang) => {
+    setDeleteBarang(barang);
   };
 
   const confirmDelete = async () => {
-    if (deleteUser) {
-      const res = await fetch(`/api/users/${deleteUser.id_user}`, {
+    if (deleteBarang) {
+      const res = await fetch(`/api/barang/${deleteBarang.id_barang}`, {
         method: 'DELETE',
       });
       if (res.ok) {
-        toast.success('User deleted successfully');
+        toast.success('Barang deleted successfully');
         router.refresh();
       } else {
-        toast.error('Failed to delete user');
+        toast.error('Failed to delete barang');
       }
-      setDeleteUser(null);
+      setDeleteBarang(null);
     }
   };
 
   const handleSubmit = async (values) => {
-    const url = selectedUser ? `/api/users/${selectedUser.id_user}` : '/api/users';
-    const method = selectedUser ? 'PUT' : 'POST';
+    const url = selectedBarang ? `/api/barang/${selectedBarang.id_barang}` : '/api/barang';
+    const method = selectedBarang ? 'PUT' : 'POST';
 
     const res = await fetch(url, {
       method,
@@ -68,12 +68,12 @@ export function UserTable({ users, stats }) {
     });
 
     if (res.ok) {
-      toast.success(`User ${selectedUser ? 'updated' : 'created'} successfully`);
+      toast.success(`Barang ${selectedBarang ? 'updated' : 'created'} successfully`);
       setOpen(false);
-      setSelectedUser(null);
+      setSelectedBarang(null);
       router.refresh();
     } else {
-      toast.error(`Failed to ${selectedUser ? 'update' : 'create'} user`);
+      toast.error(`Failed to ${selectedBarang ? 'update' : 'create'} barang`);
     }
   };
 
@@ -82,33 +82,33 @@ export function UserTable({ users, stats }) {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Pengguna</h1>
+        <h1 className="text-2xl font-bold">Barang</h1>
         <Dialog open={open} onOpenChange={(isOpen) => {
           setOpen(isOpen);
           if (!isOpen) {
-            setSelectedUser(null);
+            setSelectedBarang(null);
           }
         }}>
           <DialogTrigger asChild>
-            <Button>Tambah Pengguna</Button>
+            <Button>Tambah Barang</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{selectedUser ? "Edit User" : "Tambah Pengguna"}</DialogTitle>
+              <DialogTitle>{selectedBarang ? "Edit Barang" : "Tambah Barang"}</DialogTitle>
             </DialogHeader>
-            <UserForm user={selectedUser} onSubmit={handleSubmit} />
+            <BarangForm barang={selectedBarang} kategori={kategori} onSubmit={handleSubmit} />
           </DialogContent>
         </Dialog>
       </div>
 
       <SummaryCards stats={stats} />
 
-      <AlertDialog open={!!deleteUser} onOpenChange={() => setDeleteUser(null)}>
+      <AlertDialog open={!!deleteBarang} onOpenChange={() => setDeleteBarang(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user.
+              This action cannot be undone. This will permanently delete the item.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -118,7 +118,7 @@ export function UserTable({ users, stats }) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <DataTable columns={columns} data={users} className="bg-white p-4 rounded-md shadow" />
+      <DataTable columns={columns} data={initialBarang} className="bg-white p-4 rounded-md shadow" />
     </div>
   )
 }

@@ -16,7 +16,7 @@ export default async function PenggunaPage() {
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="p-4">
       <UserTable users={users} stats={stats} />
     </div>
   );
