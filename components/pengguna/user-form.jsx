@@ -31,6 +31,7 @@ const formSchema = z.object({
   password: z.string().min(6, "Password minimal 6 karakter").optional(),
   nama_lengkap: z.string().min(2, "Nama terlalu pendek"),
   role: z.string(),
+  status: z.enum(["AKTIF", "NONAKTIF"]), // Added
 });
 
 export function UserForm({ user, onSubmit }) {
@@ -41,6 +42,7 @@ export function UserForm({ user, onSubmit }) {
           username: user.username,
           nama_lengkap: user.nama_lengkap,
           role: user.role,
+          status: user.status,
           password: "",
         }
       : {
@@ -48,6 +50,7 @@ export function UserForm({ user, onSubmit }) {
           password: "",
           nama_lengkap: "",
           role: "ADMIN",
+          status: "AKTIF",
         },
   });
 
@@ -114,6 +117,27 @@ export function UserForm({ user, onSubmit }) {
                 <SelectContent>
                   <SelectItem value="ADMIN">Admin</SelectItem>
                   <SelectItem value="USER">User</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="AKTIF">Aktif</SelectItem>
+                  <SelectItem value="NONAKTIF">Nonaktif</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

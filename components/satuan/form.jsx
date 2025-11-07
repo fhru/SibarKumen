@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,28 +11,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  kode_kategori: z.string().min(2, 'Kode kategori terlalu pendek'),
-  nama_kategori: z.string().min(2, 'Nama kategori terlalu pendek'),
+  nama_satuan: z.string().min(2, "Nama satuan terlalu pendek"),
+  singkatan: z.string().min(1, "Singkatan tidak boleh kosong"),
   keterangan: z.string().optional(),
 });
 
-export function KategoriForm({ kategori, onSubmit }) {
+export function SatuanForm({ satuan, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: kategori
+    defaultValues: satuan
       ? {
-          kode_kategori: kategori.kode_kategori,
-          nama_kategori: kategori.nama_kategori,
-          keterangan: kategori.keterangan || '',
+          nama_satuan: satuan.nama_satuan,
+          singkatan: satuan.singkatan,
+          keterangan: satuan.keterangan || "",
         }
       : {
-          kode_kategori: '',
-          nama_kategori: '',
-          keterangan: '',
+          nama_satuan: "",
+          singkatan: "",
+          keterangan: "",
         },
   });
 
@@ -45,12 +45,12 @@ export function KategoriForm({ kategori, onSubmit }) {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="kode_kategori"
+          name="nama_satuan"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Kode Kategori</FormLabel>
+              <FormLabel>Nama Satuan</FormLabel>
               <FormControl>
-                <Input placeholder="Kode Kategori" {...field} />
+                <Input placeholder="Nama Satuan" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -58,12 +58,12 @@ export function KategoriForm({ kategori, onSubmit }) {
         />
         <FormField
           control={form.control}
-          name="nama_kategori"
+          name="singkatan"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nama Kategori</FormLabel>
+              <FormLabel>Singkatan</FormLabel>
               <FormControl>
-                <Input placeholder="Nama Kategori" {...field} />
+                <Input placeholder="Singkatan" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

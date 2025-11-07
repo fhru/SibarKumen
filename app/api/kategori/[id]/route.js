@@ -5,11 +5,12 @@ export async function PUT(request, { params }) {
   try {
     const { id } = params;
     const body = await request.json();
-    const { nama_kategori, keterangan } = body;
+    const { kode_kategori, nama_kategori, keterangan } = body;
 
     const updatedCategory = await prisma.kategori.update({
       where: { id_kategori: parseInt(id) },
       data: {
+        kode_kategori,
         nama_kategori,
         keterangan,
       },

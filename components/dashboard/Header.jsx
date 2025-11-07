@@ -3,6 +3,7 @@ import { Menu, ChevronLeft } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Header({ user, toggleSidebar, isCollapsed, toggleCollapse }) {
   const getInitials = (name) => {
@@ -32,6 +33,7 @@ export default function Header({ user, toggleSidebar, isCollapsed, toggleCollaps
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Dashboard</h2>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <Avatar>
             <AvatarFallback>{user ? getInitials(user.nama_lengkap) : 'G'}</AvatarFallback>
           </Avatar>

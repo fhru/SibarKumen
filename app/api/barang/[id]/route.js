@@ -5,15 +5,17 @@ export async function PUT(request, { params }) {
   try {
     const { id } = params;
     const body = await request.json();
-    const { id_kategori, kode_barang, nama_barang, deskripsi } = body;
+    const { id_kategori, id_satuan, kode_barang, nama_barang, deskripsi, stok_minimum } = body;
 
     const updatedBarang = await prisma.barang.update({
       where: { id_barang: parseInt(id) },
       data: {
-        id_kategori,
+        id_kategori: parseInt(id_kategori, 10),
+        id_satuan: parseInt(id_satuan, 10),
         kode_barang,
         nama_barang,
         deskripsi,
+        stok_minimum: parseInt(stok_minimum, 10),
       },
     });
 

@@ -27,7 +27,7 @@ import { toast } from 'sonner';
 
 import { SummaryCards } from "@/components/barang/summary-cards"
 
-export function BarangTable({ initialBarang, stats, kategori }) {
+export function BarangTable({ initialBarang, stats, kategori, satuan }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [selectedBarang, setSelectedBarang] = useState(null);
@@ -96,7 +96,7 @@ export function BarangTable({ initialBarang, stats, kategori }) {
             <DialogHeader>
               <DialogTitle>{selectedBarang ? "Edit Barang" : "Tambah Barang"}</DialogTitle>
             </DialogHeader>
-            <BarangForm barang={selectedBarang} kategori={kategori} onSubmit={handleSubmit} />
+            <BarangForm barang={selectedBarang} kategori={kategori} satuan={satuan} onSubmit={handleSubmit} />
           </DialogContent>
         </Dialog>
       </div>

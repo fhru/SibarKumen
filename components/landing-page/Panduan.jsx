@@ -38,7 +38,7 @@ export default function Panduan({ ref }) {
       {/* Teks Section */}
       <div className="text-center mb-8 md:mb-12">
         <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Panduan Penggunaan Aplikasi</h1>
-        <h2 className="text-black/50 text-base md:text-xl">
+        <h2 className="text-muted-foreground text-base md:text-xl">
           Langkah-langkah sederhana untuk mulai menggunakan SibarKumen.
         </h2>
       </div>
@@ -48,7 +48,7 @@ export default function Panduan({ ref }) {
         {panduanData.map((item, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-6"
+            className="bg-card border rounded-2xl p-6 flex flex-col gap-6"
           >
             {/* Icon section */}
             <div
@@ -59,7 +59,7 @@ export default function Panduan({ ref }) {
             {/* Text section */}
             <div>
               <h3 className="font-bold text-lg mb-2">{`${index + 1}. ${item.title}`}</h3>
-              <p className="text-black/50 text-sm">{item.description}</p>
+              <p className="text-muted-foreground text-sm">{item.description}</p>
             </div>
           </div>
         ))}

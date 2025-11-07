@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { clsx } from 'clsx';
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { clsx } from "clsx";
 import {
   Home,
   Package,
@@ -18,54 +18,107 @@ import {
   ArrowRightLeft,
   Boxes,
   Truck,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+  Scale,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const navItems = [
   {
-    type: 'category',
-    label: 'Main',
-    items: [{ href: '/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard' }],
-  },
-  {
-    type: 'category',
-    label: 'Master Data',
+    type: "category",
+    label: "Main",
     items: [
-      { href: '/dashboard/barang', icon: <Package size={20} />, label: 'Barang' },
-      { href: '/dashboard/kategori', icon: <Tags size={20} />, label: 'Kategori' },
-      { href: '/dashboard/pengguna', icon: <Users size={20} />, label: 'Pengguna' },
-    ],
-  },
-  {
-    type: 'category',
-    label: 'Transaksi',
-    items: [
-      { href: '/dashboard/barang-masuk', icon: <PackagePlus size={20} />, label: 'Barang Masuk' },
       {
-        href: '/dashboard/barang-keluar',
-        icon: <PackageMinus size={20} />,
-        label: 'Barang Keluar',
+        href: "/dashboard",
+        icon: <LayoutDashboard size={20} />,
+        label: "Dashboard",
       },
-      { href: '/dashboard/peminjaman', icon: <ArrowRightLeft size={20} />, label: 'Peminjaman' },
     ],
   },
   {
-    type: 'category',
-    label: 'Persediaan',
+    type: "category",
+    label: "Master Data",
     items: [
-      { href: '/dashboard/stok', icon: <Boxes size={20} />, label: 'Stok Barang' },
-      { href: '/dashboard/mutasi', icon: <Truck size={20} />, label: 'Mutasi Barang' },
+      {
+        href: "/dashboard/barang",
+        icon: <Package size={20} />,
+        label: "Barang",
+      },
+      {
+        href: "/dashboard/kategori",
+        icon: <Tags size={20} />,
+        label: "Kategori",
+      },
+      {
+        href: "/dashboard/pengguna",
+        icon: <Users size={20} />,
+        label: "Pengguna",
+      },
+      { href: "/dashboard/satuan", icon: <Scale size={20} />, label: "Satuan" },
     ],
   },
   {
-    type: 'category',
-    label: 'Laporan',
+    type: "category",
+    label: "Transaksi",
     items: [
-      { href: '/dashboard/laporan/masuk', icon: <FileText size={20} />, label: 'Laporan Masuk' },
-      { href: '/dashboard/laporan/keluar', icon: <FileText size={20} />, label: 'Laporan Keluar' },
-      { href: '/dashboard/laporan/mutasi', icon: <FileText size={20} />, label: 'Laporan Mutasi' },
+      {
+        href: "/dashboard/barang-masuk",
+        icon: <PackagePlus size={20} />,
+        label: "Barang Masuk",
+      },
+      {
+        href: "/dashboard/barang-keluar",
+        icon: <PackageMinus size={20} />,
+        label: "Barang Keluar",
+      },
+      {
+        href: "/dashboard/peminjaman",
+        icon: <ArrowRightLeft size={20} />,
+        label: "Peminjaman",
+      },
+    ],
+  },
+  {
+    type: "category",
+    label: "Persediaan",
+    items: [
+      {
+        href: "/dashboard/stok",
+        icon: <Boxes size={20} />,
+        label: "Stok Barang",
+      },
+      {
+        href: "/dashboard/mutasi",
+        icon: <Truck size={20} />,
+        label: "Mutasi Barang",
+      },
+    ],
+  },
+  {
+    type: "category",
+    label: "Laporan",
+    items: [
+      {
+        href: "/dashboard/laporan/masuk",
+        icon: <FileText size={20} />,
+        label: "Laporan Masuk",
+      },
+      {
+        href: "/dashboard/laporan/keluar",
+        icon: <FileText size={20} />,
+        label: "Laporan Keluar",
+      },
+      {
+        href: "/dashboard/laporan/mutasi",
+        icon: <FileText size={20} />,
+        label: "Laporan Mutasi",
+      },
     ],
   },
 ];
@@ -80,7 +133,7 @@ const NavLink = ({ href, icon, label, isCollapsed, pathname }) => {
           <TooltipTrigger asChild>
             <Button
               asChild
-              variant={isActive ? 'secondary' : 'ghost'}
+              variant={isActive ? "secondary" : "ghost"}
               className="w-full justify-center"
             >
               <Link href={href}>{icon}</Link>
@@ -95,7 +148,11 @@ const NavLink = ({ href, icon, label, isCollapsed, pathname }) => {
   }
 
   return (
-    <Button asChild variant={isActive ? 'secondary' : 'ghost'} className="justify-start">
+    <Button
+      asChild
+      variant={isActive ? "secondary" : "ghost"}
+      className="justify-start"
+    >
       <Link href={href}>
         {icon}
         <span className="ml-3">{label}</span>
@@ -104,8 +161,8 @@ const NavLink = ({ href, icon, label, isCollapsed, pathname }) => {
   );
 };
 
-import { useState } from 'react';
-import { logout } from '@/app/dashboard/actions';
+import { useState } from "react";
+import { logout } from "@/app/dashboard/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -116,15 +173,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
-export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapsed }) {
+export default function Sidebar({
+  user,
+  isSidebarOpen,
+  toggleSidebar,
+  isCollapsed,
+}) {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
   const pathname = usePathname();
 
   const getInitials = (name) => {
-    if (!name) return '';
-    const names = name.split(' ');
+    if (!name) return "";
+    const names = name.split(" ");
     if (names.length > 1) {
       return names[0][0] + names[names.length - 1][0];
     }
@@ -135,26 +197,38 @@ export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapse
     <>
       <aside
         className={clsx(
-          'fixed inset-y-0 left-0 z-40 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col transition-all duration-300 ease-in-out',
+          "fixed inset-y-0 left-0 z-40 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col transition-all duration-300 ease-in-out",
           {
-            'translate-x-0': isSidebarOpen,
-            '-translate-x-full': !isSidebarOpen,
+            "translate-x-0": isSidebarOpen,
+            "-translate-x-full": !isSidebarOpen,
           },
-          'md:translate-x-0',
-          isCollapsed ? 'w-20' : 'w-64',
+          "md:translate-x-0",
+          isCollapsed ? "w-20" : "w-64",
         )}
       >
         <div
           className={clsx(
-            'flex items-center h-16 px-4',
-            isCollapsed ? 'justify-center' : 'justify-between',
+            "flex items-center h-16 px-4",
+            isCollapsed ? "justify-center" : "justify-between",
           )}
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/images/sibarkumenlogo.png" alt="SibarKumen Logo" width={32} height={32} />
-            {!isCollapsed && <span className="font-bold text-lg">SibarKumen</span>}
+            <Image
+              src="/images/sibarkumenlogo.png"
+              alt="SibarKumen Logo"
+              width={32}
+              height={32}
+            />
+            {!isCollapsed && (
+              <span className="font-bold text-lg">SibarKumen</span>
+            )}
           </Link>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="md:hidden"
+          >
             <X size={24} />
             <span className="sr-only">Close Menu</span>
           </Button>
@@ -162,8 +236,12 @@ export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapse
         <nav className="grow flex flex-col px-2 py-4 overflow-y-auto">
           {navItems.map((item, index) => (
             <div key={index}>
-              {item.type === 'link' ? (
-                <NavLink {...item} isCollapsed={isCollapsed} pathname={pathname} />
+              {item.type === "link" ? (
+                <NavLink
+                  {...item}
+                  isCollapsed={isCollapsed}
+                  pathname={pathname}
+                />
               ) : (
                 <div className="my-2">
                   {!isCollapsed && (
@@ -192,7 +270,12 @@ export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapse
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="w-full" onClick={() => setShowLogoutAlert(true)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="w-full"
+                    onClick={() => setShowLogoutAlert(true)}
+                  >
                     <LogOut size={20} />
                   </Button>
                 </TooltipTrigger>
@@ -205,14 +288,25 @@ export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapse
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3 p-2">
                 <Avatar>
-                  <AvatarFallback>{user ? getInitials(user.nama_lengkap) : 'G'}</AvatarFallback>
+                  <AvatarFallback>
+                    {user ? getInitials(user.nama_lengkap) : "G"}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-semibold">{user ? user.nama_lengkap : 'Guest'}</p>
-                  <p className="text-xs text-gray-500">{user ? user.role : 'guest'}</p>
+                  <p className="text-sm font-semibold">
+                    {user ? user.nama_lengkap : "Guest"}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {user ? user.role : "guest"}
+                  </p>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => setShowLogoutAlert(true)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => setShowLogoutAlert(true)}
+              >
                 <LogOut size={16} className="mr-2" />
                 Logout
               </Button>
@@ -224,7 +318,9 @@ export default function Sidebar({ user, isSidebarOpen, toggleSidebar, isCollapse
       <AlertDialog open={showLogoutAlert} onOpenChange={setShowLogoutAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure you want to logout?
+            </AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>

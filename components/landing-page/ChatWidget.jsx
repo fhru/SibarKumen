@@ -47,10 +47,10 @@ export default function ChatWidget() {
           </CardHeader>
 
           {/* Content */}
-          <CardContent className="grow p-4 overflow-y-auto bg-white flex flex-col justify-between">
+          <CardContent className="grow p-4 overflow-y-auto bg-card flex flex-col justify-between">
             {/* Initial State */}
             <div className="text-center py-8">
-              <div className="inline-block bg-white p-4 rounded-2xl border border-gray-200 mb-4">
+              <div className="inline-block bg-card p-4 rounded-2xl border mb-4">
                 <Image
                   src="/images/sibarkumenlogo.png"
                   alt="Sibarkumen Logo"
@@ -58,14 +58,14 @@ export default function ChatWidget() {
                   height={64}
                 />
               </div>
-              <p className="text-gray-500">Apa yang ingin anda ketahui?</p>
+              <p className="text-muted-foreground">Apa yang ingin anda ketahui?</p>
             </div>
 
             {/* Suggested Prompts */}
             <div className="space-y-2 flex flex-col items-end">
               {suggestedPrompts.map((prompt, index) => (
                 <div
-                  className="bg-white px-4 py-2 border border-gray-200 text-end w-fit rounded-[12px] cursor-pointer hover:bg-accent transition text-base"
+                  className="bg-card px-4 py-2 border text-end w-fit rounded-[12px] cursor-pointer hover:bg-accent transition text-base"
                   key={index}
                   onClick={() => handleSuggestionClick(prompt)}
                 >
@@ -76,7 +76,7 @@ export default function ChatWidget() {
           </CardContent>
 
           {/* Footer Input */}
-          <div className="p-4 border-t bg-white">
+          <div className="p-4 border-t bg-card">
             <div className="relative">
               <Input
                 placeholder="Ask me anything..."
@@ -90,7 +90,7 @@ export default function ChatWidget() {
                 className="absolute top-1/2 right-0 -translate-y-1/2"
                 aria-label="Send message"
               >
-                <Send className="h-5 w-5 text-gray-500" />
+                <Send className="h-5 w-5 text-muted-foreground" />
               </Button>
             </div>
           </div>

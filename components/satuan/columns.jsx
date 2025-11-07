@@ -19,12 +19,12 @@ export const columns = ({ handleEdit, handleDelete }) => [
     },
   },
   {
-    accessorKey: "kode_kategori",
-    header: "Kode Kategori",
+    accessorKey: "nama_satuan",
+    header: "Nama Satuan",
   },
   {
-    accessorKey: "nama_kategori",
-    header: "Nama Kategori",
+    accessorKey: "singkatan",
+    header: "Singkatan",
   },
   {
     accessorKey: "keterangan",
@@ -43,7 +43,7 @@ export const columns = ({ handleEdit, handleDelete }) => [
   {
     id: "actions",
     cell: ({ row }) => {
-      const kategori = row.original
+      const satuan = row.original
 
       return (
         <DropdownMenu>
@@ -56,8 +56,8 @@ export const columns = ({ handleEdit, handleDelete }) => [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleEdit(kategori)}>Edit</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(kategori)}>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleEdit(satuan)}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDelete(satuan)}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

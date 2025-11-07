@@ -11,12 +11,15 @@ datasource db {
 model barang {
   id_barang            Int                    @id @default(autoincrement())
   id_kategori          Int?
+  id_satuan            Int?
   kode_barang          String                 @db.VarChar
   nama_barang          String                 @db.VarChar
   deskripsi            String?
+  stok_minimum         Int                    @default(0)
   created_at           DateTime?              @default(now()) @db.Timestamp(6)
   updated_at           DateTime?              @default(now()) @db.Timestamp(6)
   kategori             kategori?              @relation(fields: [id_kategori], references: [id_kategori], onDelete: NoAction, onUpdate: NoAction)
+  satuan               satuan?                @relation(fields: [id_satuan], references: [id_satuan], onDelete: NoAction, onUpdate: NoAction)
   detail_barang_keluar detail_barang_keluar[]
   detail_barang_masuk  detail_barang_masuk[]
   detail_peminjaman    detail_peminjaman[]
@@ -78,10 +81,20 @@ model detail_peminjaman {
 
 model kategori {
   id_kategori   Int       @id @default(autoincrement())
+  kode_kategori String    @unique @db.VarChar
   nama_kategori String    @db.VarChar
   keterangan    String?
   created_at    DateTime? @default(now()) @db.Timestamp(6)
   barang        barang[]
+}
+
+model satuan {
+  id_satuan   Int       @id @default(autoincrement())
+  nama_satuan String    @unique @db.VarChar
+  singkatan   String    @unique @db.VarChar
+  keterangan  String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  barang      barang[]
 }
 
 model mutasi_barang {
@@ -127,6 +140,7 @@ model users {
   nama_lengkap      String              @db.VarChar
   password          String
   role              Role                @default(USER)
+  status            StatusUser          @default(AKTIF)
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   barang_keluar     barang_keluar[]
   barang_masuk      barang_masuk[]
@@ -148,4 +162,9 @@ enum TipeMutasi {
 enum Role {
   ADMIN
   USER
+}
+
+enum StatusUser {
+  AKTIF
+  NONAKTIF
 }

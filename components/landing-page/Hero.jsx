@@ -10,7 +10,7 @@ export default function Hero({ onScrollToPanduan }) {
           Sistem Inventaris Barang <br /> Kelurahan{' '}
           <span className="text-primary">Ujung Menteng</span>
         </h1>
-        <h2 className="text-base md:text-2xl text-black/50">
+        <h2 className="text-base md:text-2xl text-muted-foreground">
           Kelola aset dan stok barang kelurahan dengan cepat, rapi, dan transparan.
         </h2>
       </div>

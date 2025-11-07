@@ -4,10 +4,11 @@ import prisma from '@/lib/prisma';
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { nama_kategori, keterangan } = body;
+    const { kode_kategori, nama_kategori, keterangan } = body;
 
     const newCategory = await prisma.kategori.create({
       data: {
+        kode_kategori,
         nama_kategori,
         keterangan,
       },

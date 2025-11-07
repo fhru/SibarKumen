@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function Navbar() {
         <Link href={'#'}>Kontak</Link>
         <Link href={'#'}>Inventaris</Link>
         <Link href={'#'}>Laporan</Link>
+        <ThemeToggle />
         <Button asChild size={'lg'}>
           <Link href={'/login'}>Login</Link>
         </Button>
@@ -36,7 +38,7 @@ export default function Navbar() {
       {/* Mobile Hamburger */}
       <button
         aria-label={open ? 'Tutup menu' : 'Buka menu'}
-        className="md:hidden inline-flex items-center justify-center rounded-md p-2 transition-colors hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-black/20 z-50"
+        className="md:hidden inline-flex items-center justify-center rounded-md p-2 transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring z-50"
         onClick={() => setOpen((prev) => !prev)}
       >
         {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -44,7 +46,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       <div
-        className={`md:hidden absolute left-0 right-0 top-full origin-top overflow-hidden border-t border-black/10 bg-white/90 backdrop-blur transition-all duration-300 z-60 ${
+        className={`md:hidden absolute left-0 right-0 top-full origin-top overflow-hidden border-t border-border bg-background/90 backdrop-blur transition-all duration-300 z-60 ${
           open
             ? 'max-h-64 opacity-100 pointer-events-auto'
             : 'max-h-0 opacity-0 pointer-events-none'
@@ -54,21 +56,21 @@ export default function Navbar() {
           <Link
             href={'#'}
             onClick={() => setOpen(false)}
-            className="rounded-md px-2 py-2 transition-colors hover:bg-black/5"
+            className="rounded-md px-2 py-2 transition-colors hover:bg-accent"
           >
             Kontak
           </Link>
           <Link
             href={'#'}
             onClick={() => setOpen(false)}
-            className="rounded-md px-2 py-2 transition-colors hover:bg-black/5"
+            className="rounded-md px-2 py-2 transition-colors hover:bg-accent"
           >
             Inventaris
           </Link>
           <Link
             href={'#'}
             onClick={() => setOpen(false)}
-            className="rounded-md px-2 py-2 transition-colors hover:bg-black/5"
+            className="rounded-md px-2 py-2 transition-colors hover:bg-accent"
           >
             Laporan
           </Link>

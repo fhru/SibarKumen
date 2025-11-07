@@ -7,7 +7,7 @@ export async function PUT(request, { params }) {
     try {
         const { id } = params;
         const body = await request.json();
-        const { nama_lengkap, password, role } = updateUserSchema.parse(body);
+        const { nama_lengkap, password, role, status } = updateUserSchema.parse(body);
 
         const updateData = {};
         if (nama_lengkap) {
@@ -18,6 +18,9 @@ export async function PUT(request, { params }) {
         }
         if (role) {
             updateData.role = role;
+        }
+        if (status) {
+            updateData.status = status;
         }
 
         const updatedUser = await prisma.users.update({

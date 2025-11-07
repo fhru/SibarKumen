@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { username, password, nama_lengkap, role } = createUserSchema.parse(body);
+        const { username, password, nama_lengkap, role, status } = createUserSchema.parse(body);
 
         const existingUser = await prisma.users.findUnique({
             where: { username },
@@ -41,6 +41,7 @@ export async function POST(request) {
                 password: hashedPassword,
                 nama_lengkap,
                 role,
+                status,
             },
         });
 

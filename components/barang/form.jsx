@@ -22,13 +22,21 @@ import {
 } from "@/components/ui/select";
 
 const formSchema = z.object({
-  kode_barang: z.string().min(2, "Kode barang terlalu pendek"),
+  kode_barang: z.string().optional(),
   nama_barang: z.string().min(2, "Nama barang terlalu pendek"),
-  id_kategori: z.number().int().positive(),
+  id_kategori: z.preprocess(
+    (val) => (val ? Number(val) : undefined),
+    z.number({ required_error: "Kategori harus diisi" }).int().positive()
+  ),
+  id_satuan: z.preprocess(
+    (val) => (val ? Number(val) : undefined),
+    z.number({ required_error: "Satuan harus diisi" }).int().positive()
+  ),
+  stok_minimum: z.number().int().min(0, "Stok minimum tidak boleh negatif"),
   deskripsi: z.string().optional(),
 });
 
-export function BarangForm({ barang, kategori, onSubmit }) {
+export function BarangForm({ barang, kategori, satuan, onSubmit }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: barang
@@ -36,12 +44,15 @@ export function BarangForm({ barang, kategori, onSubmit }) {
           kode_barang: barang.kode_barang,
           nama_barang: barang.nama_barang,
           id_kategori: barang.id_kategori,
-          deskripsi: barang.deskripsi,
+          id_satuan: barang.id_satuan,
+          stok_minimum: barang.stok_minimum,
+          deskripsi: barang.deskripsi || "",
         }
       : {
-          kode_barang: "",
           nama_barang: "",
-          id_kategori: null,
+          id_kategori: undefined,
+          id_satuan: undefined,
+          stok_minimum: 0,
           deskripsi: "",
         },
   });
@@ -53,19 +64,21 @@ export function BarangForm({ barang, kategori, onSubmit }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="kode_barang"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Kode Barang</FormLabel>
-              <FormControl>
-                <Input placeholder="Kode Barang" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {barang && (
+          <FormField
+            control={form.control}
+            name="kode_barang"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kode Barang</FormLabel>
+                <FormControl>
+                  <Input placeholder="Kode Barang" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="nama_barang"
@@ -86,8 +99,8 @@ export function BarangForm({ barang, kategori, onSubmit }) {
             <FormItem>
               <FormLabel>Kategori</FormLabel>
               <Select
-                onValueChange={(value) => field.onChange(Number(value))}
-                defaultValue={String(field.value)}
+                onValueChange={field.onChange}
+                defaultValue={field.value ? String(field.value) : ""}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -111,12 +124,55 @@ export function BarangForm({ barang, kategori, onSubmit }) {
         />
         <FormField
           control={form.control}
+          name="id_satuan"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Satuan</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value ? String(field.value) : ""}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih Satuan" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {satuan.map((s) => (
+                    <SelectItem
+                      key={s.id_satuan}
+                      value={String(s.id_satuan)}
+                    >
+                      {s.nama_satuan} ({s.singkatan})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="stok_minimum"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Stok Minimum</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Stok Minimum" {...field} onChange={event => field.onChange(Number(event.target.value))} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="deskripsi"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Deskripsi</FormLabel>
               <FormControl>
-                <Input placeholder="Deskripsi" {...field} />
+                <Input placeholder="Deskripsi" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -8,7 +8,7 @@ export default function About() {
     <div className="w-full px-4 sm:px-8 md:px-24 py-12 md:py-16 flex flex-col overflow-hidden">
       <div className="text-center mb-4 md:mb-8">
         <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-8">Tentang Aplikasi</h1>
-        <h2 className="text-black/50 text-base md:text-xl">
+        <h2 className="text-muted-foreground text-base md:text-xl">
           SibarKumen adalah sistem digital untuk mencatat, memantau, dan melaporkan inventaris
           gudang kelurahan secara efisien dan transparan.
         </h2>

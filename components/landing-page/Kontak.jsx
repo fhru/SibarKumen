@@ -33,12 +33,12 @@ const contactData = [
 
 export default function Kontak() {
   return (
-    <div className="w-full bg-white text-black py-16 md:py-24">
+    <div className="w-full bg-background text-foreground py-16 md:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Teks Section */}
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl md:text-5xl font-bold mb-3 md:mb-8">Contact our friendly team</h2>
-          <h2 className="text-base md:text-xl text-black/50">Let us know how we can help.</h2>
+          <h2 className="text-base md:text-xl text-muted-foreground">Let us know how we can help.</h2>
         </div>
 
         {/* Grid Section */}
@@ -46,15 +46,15 @@ export default function Kontak() {
           {contactData.map((item, index) => (
             <div
               key={index}
-              className="bg-white text-black rounded-2xl p-6 flex flex-col gap-4 h-full border border-gray-200"
+              className="bg-background text-foreground rounded-2xl p-6 flex flex-col gap-4 h-full border"
             >
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gray-100">
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-muted">
                 {item.icon}
               </div>
               <div className="grow">
                 <h3 className="font-bold text-xl mb-2">{item.title}</h3>
                 {item.lines.map((line, i) => (
-                  <p key={i} className="text-black/60 text-sm">
+                  <p key={i} className="text-muted-foreground text-sm">
                     {line}
                   </p>
                 ))}
