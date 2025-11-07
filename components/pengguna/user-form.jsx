@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,25 +11,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   username: z
     .string()
-    .min(6, 'Username minimal 6 karakter')
+    .min(6, "Username minimal 6 karakter")
     .refine((val) => !/\s/.test(val), {
-      message: 'Username tidak boleh mengandung spasi',
+      message: "Username tidak boleh mengandung spasi",
     }),
-  password: z.string().min(6, 'Password minimal 6 karakter').optional(),
-  nama_lengkap: z.string().min(2, 'Nama terlalu pendek'),
+  password: z.string().min(6, "Password minimal 6 karakter").optional(),
+  nama_lengkap: z.string().min(2, "Nama terlalu pendek"),
   role: z.string(),
 });
 
@@ -41,12 +41,13 @@ export function UserForm({ user, onSubmit }) {
           username: user.username,
           nama_lengkap: user.nama_lengkap,
           role: user.role,
+          password: "",
         }
       : {
-          username: '',
-          password: '',
-          nama_lengkap: '',
-          role: 'gudang',
+          username: "",
+          password: "",
+          nama_lengkap: "",
+          role: "ADMIN",
         },
   });
 
@@ -75,7 +76,9 @@ export function UserForm({ user, onSubmit }) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password {user ? '(Kosongkan jika tidak ingin diubah)' : ''}</FormLabel>
+              <FormLabel>
+                Password {user ? "(Kosongkan jika tidak ingin diubah)" : ""}
+              </FormLabel>
               <FormControl>
                 <Input type="password" placeholder="password" {...field} />
               </FormControl>
@@ -109,8 +112,8 @@ export function UserForm({ user, onSubmit }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="gudang">Gudang</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="USER">User</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

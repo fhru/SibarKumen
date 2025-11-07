@@ -85,7 +85,10 @@ export function BarangForm({ barang, kategori, onSubmit }) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Kategori</FormLabel>
-              <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={String(field.value)}>
+              <Select
+                onValueChange={(value) => field.onChange(Number(value))}
+                defaultValue={String(field.value)}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih Kategori" />
@@ -93,7 +96,10 @@ export function BarangForm({ barang, kategori, onSubmit }) {
                 </FormControl>
                 <SelectContent>
                   {kategori.map((k) => (
-                    <SelectItem key={k.id_kategori} value={String(k.id_kategori)}>
+                    <SelectItem
+                      key={k.id_kategori}
+                      value={String(k.id_kategori)}
+                    >
                       {k.nama_kategori}
                     </SelectItem>
                   ))}

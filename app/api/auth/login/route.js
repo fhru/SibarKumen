@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import { loginSchema } from '@/lib/schema';
-import bcrypt from 'bcryptjs';
-import { signToken } from '@/lib/jwt';
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { loginSchema } from "@/lib/schema";
+import bcrypt from "bcryptjs";
+import { signToken } from "@/lib/jwt";
 
 export async function POST(request) {
   try {
@@ -14,22 +14,39 @@ export async function POST(request) {
     });
 
     if (!user) {
-      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 },
+      );
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json(
+        { message: "Invalid credentials" },
+        { status: 401 },
+      );
     }
 
-    const token = signToken({ userId: user.id_user, username: user.username, role: user.role });
+    const token = signToken({
+      userId: user.id_user,
+      username: user.username,
+      role: user.role.toString(),
+    });
 
-    return NextResponse.json({ message: 'Login successful', token });
+    return NextResponse.json({ message: "Login successful", token });
   } catch (error) {
-    if (error.name === 'ZodError') {
-      return NextResponse.json({ message: 'Invalid input', errors: error.errors }, { status: 400 });
+    if (error.name === "ZodError") {
+      return NextResponse.json(
+        { message: "Invalid input", errors: error.errors },
+        { status: 400 },
+      );
     }
-    return NextResponse.json({ message: 'Something went wrong' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 500 },
+    );
   }
 }

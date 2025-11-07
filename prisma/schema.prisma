@@ -90,7 +90,7 @@ model mutasi_barang {
   id_barang_masuk  Int?
   id_barang_keluar Int?
   tanggal_mutasi   DateTime       @db.Date
-  tipe_mutasi      TipeMutasi?    
+  tipe_mutasi      TipeMutasi?
   jumlah           Int?
   keterangan       String?
   created_at       DateTime?      @default(now()) @db.Timestamp(6)
@@ -126,7 +126,7 @@ model users {
   username          String              @unique @db.VarChar
   nama_lengkap      String              @db.VarChar
   password          String
-  role              String              @db.VarChar
+  role              Role                @default(USER)
   created_at        DateTime?           @default(now()) @db.Timestamp(6)
   barang_keluar     barang_keluar[]
   barang_masuk      barang_masuk[]
@@ -143,4 +143,9 @@ enum TipeMutasi {
   KELUAR
   PINJAM
   KEMBALI
+}
+
+enum Role {
+  ADMIN
+  USER
 }
