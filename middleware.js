@@ -1,22 +1,57 @@
-import { NextResponse } from 'next/server'
-import { jwtVerify } from 'jose'
+import { NextResponse } from "next/server";
+import { verifyToken } from "@/lib/jwt";
 
 export async function middleware(request) {
-  const token = request.cookies.get('token')?.value
+  const token = request.cookies.get("token")?.value;
+  const { pathname } = request.nextUrl;
 
-  if (!token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // LOGIN PAGE — block user who already logged in
+  if (pathname.startsWith("/login")) {
+    if (token) {
+      const payload = await verifyToken(token);
+      if (payload) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      } else {
+        // delete invalid token
+        const res = NextResponse.next();
+        res.cookies.set("token", "", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development" ? true : false,
+          sameSite: "strict",
+          expires: new Date(0),
+          path: "/",
+        });
+        return res;
+      }
+    }
+    return NextResponse.next();
   }
 
-  try {
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET)
-    await jwtVerify(token, secret)
-    return NextResponse.next()
-  } catch (error) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // PROTECTED ROUTES
+  if (pathname.startsWith("/dashboard")) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    const payload = await verifyToken(token);
+    if (payload) {
+      return NextResponse.next();
+    } else {
+      const res = NextResponse.redirect(new URL("/login", request.url));
+      res.cookies.set("token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development" ? true : false,
+        sameSite: "strict",
+        expires: new Date(0),
+        path: "/",
+      });
+      return res;
+    }
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/dashboard/:path*',
-}
+  matcher: ["/dashboard/:path*", "/login"],
+};

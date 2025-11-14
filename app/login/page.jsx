@@ -15,9 +15,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
@@ -37,13 +36,6 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      router.push("/dashboard");
-    }
-  }, [router]);
-
   const onSubmit = async (data) => {
     const res = await fetch("/api/auth/login", {
       method: "POST",
@@ -57,11 +49,11 @@ export default function LoginPage() {
         type: "manual",
         message: error.message || "An unexpected error occurred",
       });
+      toast.error(error.message || "An unexpected error occurred");
       return;
     }
 
-    const { token } = await res.json();
-    Cookies.set("token", token, { expires: 1 }) // expires in 24 hours
+    toast.success("Login successful!");
     router.push("/dashboard");
   };
 
