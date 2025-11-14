@@ -42,11 +42,12 @@ const formSchema = z.object({
 export function BarangMasukForm({ 
   barangMasuk, 
   onSubmit, 
-  categories = [],   // Terima dari props
-  barangList = [],   // Terima dari props
-  satuanList = []    // Terima dari props
+  categories = [],
+  barangList = [],
+  satuanList = []
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState({}); // State untuk kontrol dropdown per item
 
   const defaultValues = barangMasuk
     ? {
@@ -89,32 +90,25 @@ export function BarangMasukForm({
     try {
       setIsLoading(true);
       
-      // Process each item - create barang if not exists
       const processedItems = await Promise.all(
         values.items.map(async (item) => {
           try {
-            // Cari barang berdasarkan nama (case insensitive)
             const existingBarang = barangList.find(
               barang => barang.nama_barang.toLowerCase() === item.nama_barang.toLowerCase()
             );
 
             if (existingBarang) {
-              // Jika barang sudah ada, gunakan ID yang ada
               return {
                 id_barang: existingBarang.id_barang,
                 jumlah: item.jumlah,
                 harga: item.harga || 0,
               };
             } else {
-              // Jika barang belum ada, buat barang baru via API
               const kategori = categories.find(k => k.id_kategori === item.id_kategori);
-              
-              // Generate kode barang otomatis berdasarkan kategori
               const kodeKategori = kategori?.kode_kategori || 'BRG';
               const timestamp = Date.now().toString().slice(-4);
               const kodeBarang = `${kodeKategori}-${timestamp}`;
 
-              // Create new barang via API
               const createBarangRes = await fetch('/api/barang', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -152,11 +146,10 @@ export function BarangMasukForm({
         })
       );
 
-      // Submit barang masuk dengan items yang sudah diproses
       const submitData = {
         tanggal_masuk: values.tanggal_masuk,
         keterangan: values.keterangan,
-        id_user: 1, // TODO: Ganti dengan user ID dari session/auth
+        id_user: 1,
         items: processedItems,
       };
 
@@ -182,14 +175,77 @@ export function BarangMasukForm({
 
   const removeItem = (index) => {
     remove(index);
+    // Hapus juga state suggestions untuk item yang dihapus
+    setShowSuggestions(prev => {
+      const newState = { ...prev };
+      delete newState[index];
+      return newState;
+    });
   };
 
   // Filter barang suggestions berdasarkan input
   const getBarangSuggestions = (inputValue, index) => {
     if (!inputValue || inputValue.length < 2) return [];
+    
+    // Filter barang yang belum dipilih di item lain
+    const selectedBarangInOtherItems = fields
+      .filter((_, i) => i !== index) // Exclude current item
+      .map(field => form.getValues(`items.${i}.nama_barang`))
+      .filter(Boolean);
+
     return barangList.filter(barang =>
-      barang.nama_barang.toLowerCase().includes(inputValue.toLowerCase())
-    ).slice(0, 5); // Limit to 5 suggestions
+      barang.nama_barang.toLowerCase().includes(inputValue.toLowerCase()) &&
+      !selectedBarangInOtherItems.includes(barang.nama_barang)
+    ).slice(0, 5);
+  };
+
+  // Handle ketika user memilih barang dari dropdown
+  const handleBarangSelect = (barang, index) => {
+    // Set nilai form
+    form.setValue(`items.${index}.nama_barang`, barang.nama_barang);
+    form.setValue(`items.${index}.id_kategori`, barang.id_kategori || 0);
+    form.setValue(`items.${index}.id_satuan`, barang.id_satuan || 0);
+    form.setValue(`items.${index}.deskripsi`, barang.deskripsi || '');
+    
+    // Sembunyikan dropdown untuk item ini
+    setShowSuggestions(prev => ({
+      ...prev,
+      [index]: false
+    }));
+  };
+
+  // Handle ketika user mengubah input manual
+  const handleBarangInputChange = (value, index) => {
+    // Reset kategori dan satuan jika user menghapus input
+    if (!value) {
+      form.setValue(`items.${index}.id_kategori`, 0);
+      form.setValue(`items.${index}.id_satuan`, 0);
+      form.setValue(`items.${index}.deskripsi`, '');
+    }
+    
+    // Tampilkan dropdown jika ada input
+    if (value && value.length >= 2) {
+      setShowSuggestions(prev => ({
+        ...prev,
+        [index]: true
+      }));
+    } else {
+      setShowSuggestions(prev => ({
+        ...prev,
+        [index]: false
+      }));
+    }
+  };
+
+  // Handle ketika input kehilangan fokus
+  const handleBarangInputBlur = (index) => {
+    // Tunggu sebentar sebelum menyembunyikan dropdown untuk memberi waktu klik suggestion
+    setTimeout(() => {
+      setShowSuggestions(prev => ({
+        ...prev,
+        [index]: false
+      }));
+    }, 200);
   };
 
   return (
@@ -246,6 +302,7 @@ export function BarangMasukForm({
           {fields.map((field, index) => {
             const namaBarangValue = form.watch(`items.${index}.nama_barang`);
             const suggestions = getBarangSuggestions(namaBarangValue, index);
+            const shouldShowSuggestions = showSuggestions[index] && suggestions.length > 0;
 
             return (
               <div key={field.id} className="p-4 border rounded-lg space-y-4">
@@ -262,19 +319,28 @@ export function BarangMasukForm({
                             placeholder="Masukkan nama barang..." 
                             {...field} 
                             disabled={isLoading}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              handleBarangInputChange(e.target.value, index);
+                            }}
+                            onBlur={() => handleBarangInputBlur(index)}
+                            onFocus={() => {
+                              if (field.value && field.value.length >= 2) {
+                                setShowSuggestions(prev => ({
+                                  ...prev,
+                                  [index]: true
+                                }));
+                              }
+                            }}
                           />
-                          {suggestions.length > 0 && (
+                          {shouldShowSuggestions && (
                             <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
                               {suggestions.map((barang) => (
                                 <div
                                   key={barang.id_barang}
                                   className="px-3 py-2 cursor-pointer hover:bg-gray-100 border-b last:border-b-0"
-                                  onClick={() => {
-                                    field.onChange(barang.nama_barang);
-                                    form.setValue(`items.${index}.id_kategori`, barang.id_kategori || 0);
-                                    form.setValue(`items.${index}.id_satuan`, barang.id_satuan || 0);
-                                    form.setValue(`items.${index}.deskripsi`, barang.deskripsi || '');
-                                  }}
+                                  onClick={() => handleBarangSelect(barang, index)}
+                                  onMouseDown={(e) => e.preventDefault()} // Prevent input blur
                                 >
                                   <div className="font-medium">{barang.nama_barang}</div>
                                   <div className="text-sm text-gray-500">
